@@ -2,28 +2,34 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { API_BASE, assetUrl } from "../config";
 
-/* ---------------- DEMO CLIENTS ---------------- */
+/* ---------- RANDOM IMAGE HELPER ---------- */
+const randomClientImage = (gender = "men") =>
+  `https://randomuser.me/api/portraits/${gender}/${Math.floor(
+    Math.random() * 100
+  )}.jpg`;
+
+/* ---------- DEMO CLIENTS ---------- */
 const demoClients = [
   {
     _id: "demo1",
     name: "Aarav Sharma",
     description: "Excellent service and smooth communication.",
     designation: "CEO, Skyline Group",
-    image: "https://randomuser.me/api/portraits/men/32.jpg",
+    image: randomClientImage("men"),
   },
   {
     _id: "demo2",
     name: "Priya Mehta",
     description: "Creative team with great attention to detail.",
     designation: "Marketing Head, Urban Homes",
-    image: "https://randomuser.me/api/portraits/women/45.jpg",
+    image: randomClientImage("women"),
   },
   {
     _id: "demo3",
     name: "Rohan Verma",
     description: "Highly professional and result-oriented.",
     designation: "Founder, GreenBuild",
-    image: "https://randomuser.me/api/portraits/men/54.jpg",
+    image: randomClientImage("men"),
   },
 ];
 
@@ -38,10 +44,11 @@ const AddClient = () => {
   const [clients, setClients] = useState([]);
   const [usingDemo, setUsingDemo] = useState(false);
 
-  /* ---------------- LOAD CLIENTS ---------------- */
+  /* ---------- LOAD CLIENTS ---------- */
   const loadClients = async () => {
     try {
       const res = await axios.get(`${API_BASE}/api/clients`);
+
       if (Array.isArray(res.data) && res.data.length > 0) {
         setClients(res.data);
         setUsingDemo(false);
@@ -59,7 +66,7 @@ const AddClient = () => {
     loadClients();
   }, []);
 
-  /* ---------------- ADD CLIENT ---------------- */
+  /* ---------- ADD CLIENT ---------- */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("");
@@ -74,6 +81,7 @@ const AddClient = () => {
       await axios.post(`${API_BASE}/api/clients`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
       setStatus("✅ Client saved");
       setForm({ name: "", description: "", designation: "" });
       setImage(null);
@@ -105,7 +113,9 @@ const AddClient = () => {
           <input
             placeholder="Designation (e.g. CEO, Founder)"
             value={form.designation}
-            onChange={(e) => setForm({ ...form, designation: e.target.value })}
+            onChange={(e) =>
+              setForm({ ...form, designation: e.target.value })
+            }
             required
           />
           <input
